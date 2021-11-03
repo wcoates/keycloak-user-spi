@@ -1,0 +1,3 @@
+FROM jboss/keycloak
+
+COPY userspi/ /opt/jboss/keycloak/standalone/deployments/
