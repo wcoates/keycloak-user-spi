@@ -7,14 +7,14 @@ import lombok.Data;
 
 @Data
 public class UserLookup {
-	private final User user;
-	private final UserModel userModel;
+    private final User user;
+    private final UserModel userModel;
 
-	public final String getUsername() {
-		return user.getUsername();
-	}
+    public final String getUsername() {
+        return user.getUsername();
+    }
 
-	public final String getPassword() {
-		return user.getPassword();
-	}
+    public final String getPassword() {
+        return user.getPassword();
+    }
 }
