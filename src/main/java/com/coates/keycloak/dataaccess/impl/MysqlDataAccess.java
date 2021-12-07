@@ -21,6 +21,7 @@ public class MysqlDataAccess implements DataAccess {
     private static final String[] COLUMN_NAMES = {"MEMBER_ID", "EMAIL", "PASSWORD", "DELETED_AT"};
     private static final String USER = "root";
     private static final String PASSWORD = "password";
+    private static final int RECORD_LIMIT = 1;
 
     private final Connection connection = createConnection();
 
@@ -35,23 +36,18 @@ public class MysqlDataAccess implements DataAccess {
         try {
             final String connection =
                     constructConnection(HOSTNAME, PORT, DATABASE_NAME, USER, PASSWORD);
-            log.info("Creating mysqldb connection with connection: {" + connection + "}");
             conn = DriverManager.getConnection(connection);
-            log.info("Successfully formed connection to mysqldb");
-        } catch (final SQLException ex) {
-            log.error("SQLException: " + ex.getMessage());
-            log.error("SQLState: " + ex.getSQLState());
-            log.error("VendorError: " + ex.getErrorCode());
-        } catch (final Exception ex) {
-            log.error("Error while creating connection\n" + ex.getMessage());
+        } catch (final SQLException e) {
+            logSqlException(e);
+        } catch (final Exception e) {
+            log.error("Error while creating connection\n" + e.getMessage());
         }
 
         return conn;
     }
 
     private final User retrieveUser(final String username) {
-        final String query = constructQuery(COLUMN_NAMES, TABLE_NAME);
-        log.info("Retrieving user with username: {" + username + "}");
+        final String query = constructQuery(COLUMN_NAMES, TABLE_NAME, RECORD_LIMIT);
 
         try {
             if (connection != null) {
@@ -63,24 +59,19 @@ public class MysqlDataAccess implements DataAccess {
                     return constructUserFromResultSet(stmt.executeQuery(query));
                 }
             }
-        } catch (SQLException e) {
-            log.error("SQLException: " + e.getMessage());
-            log.error("SQLState: " + e.getSQLState());
-            log.error("VendorError: " + e.getErrorCode());
-        } catch (Exception e) {
+        } catch (final SQLException e) {
+            logSqlException(e);
+        } catch (final Exception e) {
             log.error("General query exception\n" + e.getMessage());
         }
 
         return null;
     }
 
-
     private final User constructUserFromResultSet(final ResultSet rs) throws Exception {
         if (rs != null) {
             while (rs.next()) {
-                log.info("ResultSet:" + rs.getString("MEMBER_ID") + " " + rs.getString("EMAIL")
-                        + " " + rs.getString("PASSWORD"));
-                if (rs.getString("DELETED_AT") != null) {
+                if (!isDeletedUser(rs)) {
                     return new User(rs.getString("MEMBER_ID"), rs.getString("EMAIL"),
                             rs.getString("PASSWORD"));
                 }
@@ -90,14 +81,33 @@ public class MysqlDataAccess implements DataAccess {
         return null;
     }
 
+    public static final boolean isDeletedUser(final ResultSet rs) {
+        try {
+            return rs.getString("DELETED_AT") != null;
+        } catch (SQLException e) {
+            logSqlException(e);
+        }
+
+        return false;
+    }
+
     public static final String constructConnection(final String hostname, final Integer port,
-            final String tableName, String user, String password)
+            final String tableName, final String user, final String password)
     {
         return "jdbc:mysql://" + hostname + ":" + port + "/" + tableName + "?" + "user=" + user
                 + "&password=" + password;
     }
 
-    public static final String constructQuery(final String[] columnNames, final String tableName) {
-        return "select " + String.join(", ", columnNames) + " from " + TABLE_NAME;
+    public static final String constructQuery(final String[] columnNames, final String tableName,
+            final int recordLimit)
+    {
+        return "select " + String.join(", ", columnNames) + " from " + TABLE_NAME + " LIMIT "
+                + recordLimit;
+    }
+
+    private static final void logSqlException(final SQLException e) {
+        log.error("SQLException: " + e.getMessage());
+        log.error("SQLState: " + e.getSQLState());
+        log.error("VendorError: " + e.getErrorCode());
     }
 }

@@ -87,7 +87,6 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
         return null;
     }
 
-    // For making passwords read-only
     @Override
     public final boolean updateCredential(final RealmModel realm, final UserModel userModel,
             final CredentialInput input)
@@ -103,7 +102,7 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
     public final void disableCredentialType(final RealmModel realm, final UserModel userModel,
             String credentialType)
     {
-
+        //
     }
 
     @Override

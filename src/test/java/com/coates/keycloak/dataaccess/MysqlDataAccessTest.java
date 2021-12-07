@@ -20,7 +20,8 @@ public class MysqlDataAccessTest {
     private static final String TABLE_NAME = "users";
     private static final String[] columnNames = {"MEMBER_ID", "EMAIL", "PASSWORD", "DELETED_AT"};
     private static final String constructedQuery =
-            "select MEMBER_ID, EMAIL, PASSWORD, DELETED_AT from users";
+            "select MEMBER_ID, EMAIL, PASSWORD, DELETED_AT from users LIMIT 1";
+    private static final int RECORD_LIMIT = 1;
 
     @Test
     void testConstructConnection() {
@@ -35,8 +36,7 @@ public class MysqlDataAccessTest {
 
     @Test
     void testConstructQuery() {
-        System.out.println(MysqlDataAccess.constructQuery(columnNames, TABLE_NAME));
-        assertEquals(true,
-                MysqlDataAccess.constructQuery(columnNames, TABLE_NAME).equals(constructedQuery));
+        assertEquals(true, MysqlDataAccess.constructQuery(columnNames, TABLE_NAME, RECORD_LIMIT)
+                .equals(constructedQuery));
     }
 }
