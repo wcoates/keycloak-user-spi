@@ -3,6 +3,8 @@ package com.coates.keycloak.userrepository;
 
 import org.keycloak.models.UserModel;
 
+import com.coates.keycloak.dataaccess.impl.User;
+
 import lombok.Data;
 
 @Data

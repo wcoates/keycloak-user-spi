@@ -8,6 +8,6 @@ import org.junit.jupiter.api.Test;
 public class DataAccessFactoryTest {
     @Test
     void testCreateDataaccess() {
-        assertEquals(true, DataAccessFactory.createDataAccess() != null);
+        assertEquals(true, DataAccessFactory.createDataAccessImpls() != null);
     }
 }

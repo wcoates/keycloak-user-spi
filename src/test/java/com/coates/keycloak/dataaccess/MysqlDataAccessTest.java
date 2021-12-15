@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import com.coates.keycloak.dataaccess.impl.MysqlDataAccess;
 
 public class MysqlDataAccessTest {
-    private final DataAccess mysqlDataAccess = DataAccessFactory.createDataAccess();
+    private final DataAccess mysqlDataAccess = DataAccessFactory.createDataAccessByName("mysql");
 
     private final String hostname = "127.0.0.1";
     private final Integer port = 3306;
@@ -20,7 +20,8 @@ public class MysqlDataAccessTest {
     private static final String TABLE_NAME = "users";
     private static final String[] columnNames = {"MEMBER_ID", "EMAIL", "PASSWORD", "DELETED_AT"};
     private static final String constructedQuery =
-            "select MEMBER_ID, EMAIL, PASSWORD, DELETED_AT from users LIMIT 1";
+            "SELECT MEMBER_ID, EMAIL, PASSWORD, DELETED_AT FROM users WHERE email=\"wcoates\" LIMIT 1";
+    private static final String usernameToLookup = "wcoates";
     private static final int RECORD_LIMIT = 1;
 
     @Test
@@ -36,7 +37,9 @@ public class MysqlDataAccessTest {
 
     @Test
     void testConstructQuery() {
-        assertEquals(true, MysqlDataAccess.constructQuery(columnNames, TABLE_NAME, RECORD_LIMIT)
-                .equals(constructedQuery));
+        assertEquals(true,
+                MysqlDataAccess
+                        .constructQuery(columnNames, TABLE_NAME, usernameToLookup, RECORD_LIMIT)
+                        .equals(constructedQuery));
     }
 }

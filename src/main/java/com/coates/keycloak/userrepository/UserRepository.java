@@ -8,6 +8,7 @@ import org.keycloak.models.UserModel;
 import org.keycloak.storage.adapter.AbstractUserAdapter;
 
 import com.coates.keycloak.dataaccess.DataAccess;
+import com.coates.keycloak.dataaccess.impl.User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
@@ -20,12 +21,10 @@ public class UserRepository {
     private final ComponentModel model;
 
     public final UserLookup retrieveUser(final String username, final RealmModel realm) {
-        log.info("Retrieving user from dataaccess");
         User userFromDataaccess = dataaccess.lookupUser(username);
 
         if (userFromDataaccess == null) {
-            log.info("User not found in dataaccess");
-            userFromDataaccess = new User("", username, "");
+            userFromDataaccess = new User(username, "");
         }
         final UserLookup userLookup =
                 new UserLookup(userFromDataaccess, adaptToUserModel(username, realm));

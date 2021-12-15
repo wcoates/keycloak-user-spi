@@ -18,8 +18,6 @@ public class CustomUserStorageProviderTest {
 
     @Test
     void testUserModelLookup() {
-        System.out.println(provider.getUserByUsername(null, "").toString());
-
         assertEquals(true, provider.getUserByUsername(null, "").getUsername().equals(""));
     }
 

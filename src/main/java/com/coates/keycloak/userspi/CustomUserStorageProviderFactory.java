@@ -9,6 +9,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.storage.UserStorageProviderFactory;
 
 import com.coates.keycloak.dataaccess.DataAccessFactory;
+import com.coates.keycloak.dataaccess.DataAccessManager;
 import com.coates.keycloak.userrepository.UserRepository;
 
 public class CustomUserStorageProviderFactory
@@ -29,8 +30,8 @@ public class CustomUserStorageProviderFactory
 
     @Override
     public CustomUserStorageProvider create(KeycloakSession session, ComponentModel model) {
-        final UserRepository userRepository =
-                new UserRepository(DataAccessFactory.createDataAccess(), session, model);
+        final UserRepository userRepository = new UserRepository(
+                new DataAccessManager(DataAccessFactory.createDataAccessImpls()), session, model);
 
         return new CustomUserStorageProvider(userRepository, session, model);
     }

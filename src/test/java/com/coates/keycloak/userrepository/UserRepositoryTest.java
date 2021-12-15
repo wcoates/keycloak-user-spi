@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 
 import com.coates.keycloak.dataaccess.DataAccessFactory;
+import com.coates.keycloak.dataaccess.DataAccessManager;
 
 public class UserRepositoryTest {
     private static UserRepository userRepository;
@@ -32,6 +33,7 @@ public class UserRepositoryTest {
 
     @BeforeAll
     public static void init() {
-        userRepository = new UserRepository(DataAccessFactory.createDataAccess(), null, null);
+        userRepository = new UserRepository(
+                new DataAccessManager(DataAccessFactory.createDataAccessImpls()), null, null);
     }
 }

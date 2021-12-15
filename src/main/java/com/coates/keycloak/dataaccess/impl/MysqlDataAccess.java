@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.coates.keycloak.dataaccess.DataAccess;
-import com.coates.keycloak.userrepository.User;
 
 import lombok.extern.jbosslog.JBossLog;
 
@@ -47,7 +46,7 @@ public class MysqlDataAccess implements DataAccess {
     }
 
     private final User retrieveUser(final String username) {
-        final String query = constructQuery(COLUMN_NAMES, TABLE_NAME, RECORD_LIMIT);
+        final String query = constructQuery(COLUMN_NAMES, TABLE_NAME, username, RECORD_LIMIT);
 
         try {
             if (connection != null) {
@@ -72,8 +71,7 @@ public class MysqlDataAccess implements DataAccess {
         if (rs != null) {
             while (rs.next()) {
                 if (!isDeletedUser(rs)) {
-                    return new User(rs.getString("MEMBER_ID"), rs.getString("EMAIL"),
-                            rs.getString("PASSWORD"));
+                    return new User(rs.getString("EMAIL"), rs.getString("PASSWORD"));
                 }
             }
         }
@@ -99,10 +97,10 @@ public class MysqlDataAccess implements DataAccess {
     }
 
     public static final String constructQuery(final String[] columnNames, final String tableName,
-            final int recordLimit)
+            final String username, final int recordLimit)
     {
-        return "select " + String.join(", ", columnNames) + " from " + TABLE_NAME + " LIMIT "
-                + recordLimit;
+        return "SELECT " + String.join(", ", columnNames) + " FROM " + TABLE_NAME
+                + " WHERE email=\"" + username + "\" LIMIT " + recordLimit;
     }
 
     private static final void logSqlException(final SQLException e) {
