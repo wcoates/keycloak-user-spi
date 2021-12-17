@@ -11,9 +11,7 @@ import com.coates.keycloak.dataaccess.DataAccess;
 import com.coates.keycloak.dataaccess.impl.User;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.jbosslog.JBossLog;
 
-@JBossLog
 @RequiredArgsConstructor
 public class UserRepository {
     private final DataAccess dataaccess;

@@ -40,7 +40,7 @@ public class DataAccessFactory {
 
         if (dataAccessName.equals("dynamo")) { return new DynamoDataAccess(); }
 
-        log.error("No dataAccess defined for dataAccessName: " + dataAccessName);
+        log.error("No data access defined for data access name: " + dataAccessName);
 
         return null;
     }
