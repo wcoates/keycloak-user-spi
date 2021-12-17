@@ -34,9 +34,7 @@ public class DataAccessManager implements DataAccess {
             }
         });
 
-        if (!users.isEmpty()) {
-            log.info("User to be returned: " + users.get(0));
-        } else {
+        if (users.isEmpty()) {
             log.info("Could not find a user in dataaccess.");
         }
 
